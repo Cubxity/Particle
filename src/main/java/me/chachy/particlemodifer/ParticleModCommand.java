@@ -1,60 +1,56 @@
 package me.chachy.particlemodifer;
 
-import net.minecraft.command.*;
-import net.minecraft.client.*;
-import net.minecraft.util.*;
+import cc.hyperium.commands.BaseCommand;
+import cc.hyperium.commands.CommandException;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
-public class ParticleModCommand extends CommandBase
-{
+public class ParticleModCommand implements BaseCommand {
+
     private ParticleMod mod;
 
     public ParticleModCommand(final ParticleMod mod) {
         this.mod = mod;
     }
 
-    public String getCommandName() {
+    @Override
+    public String getName() {
         return "particlemod";
     }
 
-    public String getCommandUsage(final ICommandSender sender) {
+    @Override
+    public String getUsage() {
         return "/particlemod <multiplier>";
     }
 
-    public void processCommand(final ICommandSender sender, final String[] args) {
+    @Override
+    public void onExecute(String[] args) throws CommandException {
         if (args.length < 1) {
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent)new ChatComponentText("Current particle multiplier: " + this.mod.multiplier));
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent)new ChatComponentText(""));
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent)new ChatComponentText("Change it by doing " + this.getCommandUsage(sender)));
+            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText("Current particle multiplier: " + this.mod.multiplier));
+            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText(""));
+            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText("Change it by doing " + getUsage()));
             return;
         }
         if (!this.tryParse(args[0])) {
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent)new ChatComponentText("Usage: " + this.getCommandUsage(sender)));
+            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText("Usage: " + getUsage()));
             return;
         }
         final Integer multiplier = Integer.parseInt(args[0]);
         if (multiplier < 1) {
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent)new ChatComponentText("Usage: " + this.getCommandUsage(sender)));
+            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText("Usage: " + getUsage()));
             return;
         }
         this.mod.multiplier = multiplier;
         this.mod.saveConfig();
-        Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent)new ChatComponentText("Particle multiplier set to " + multiplier + "!"));
-    }
-
-    public int getRequiredPermissionLevel() {
-        return 0;
-    }
-
-    public boolean canCommandSenderUseCommand(final ICommandSender sender) {
-        return true;
+        Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText("Particle multiplier set to " + multiplier + "!"));
     }
 
     private boolean tryParse(final String parse) {
         try {
             Integer.parseInt(parse);
             return true;
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
