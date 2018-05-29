@@ -1,5 +1,5 @@
 {
-  "name":"Addon Example",
+  "name":"Particle Modifier",
   "version":"1.0",
-  "mainClass":"com.example.AddonExample"
+  "mainClass":"me.chachy.particlemodifer.ParticleMod"
 }
