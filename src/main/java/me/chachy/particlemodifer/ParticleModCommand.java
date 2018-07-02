@@ -1,20 +1,13 @@
 package me.chachy.particlemodifer;
 
+import cc.hyperium.Hyperium;
 import cc.hyperium.commands.BaseCommand;
-import cc.hyperium.commands.CommandException;
-import cc.hyperium.utils.ChatColor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+
+import static cc.hyperium.utils.ChatColor.*;
 
 public class ParticleModCommand implements BaseCommand {
 
-    private ParticleMod mod;
-    private String prefix = ChatColor.DARK_AQUA + "[" + ChatColor.AQUA + ChatColor.BOLD + "ParticleAddon" + ChatColor.DARK_AQUA + "] " + ChatColor.WHITE;
-
-    public ParticleModCommand(final ParticleMod mod) {
-        this.mod = mod;
-    }
+    private final String prefix = DARK_AQUA + "[" + AQUA + BOLD + "ParticleAddon" + DARK_AQUA + "] " + WHITE;
 
     @Override
     public String getName() {
@@ -27,24 +20,23 @@ public class ParticleModCommand implements BaseCommand {
     }
 
     @Override
-    public void onExecute(String[] args) throws CommandException {
+    public void onExecute(String[] args) {
         if (args.length < 1) {
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText(prefix + "Current particle multiplier: " + this.mod.multiplier));
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText(prefix + "Change it by doing " + getUsage()));
+            Hyperium.INSTANCE.getHandlers().getGeneralChatHandler().sendMessage(prefix + "Current particle multiplier: " + ParticleMod.multiplier);
+            Hyperium.INSTANCE.getHandlers().getGeneralChatHandler().sendMessage(prefix + "Change it by doing " + getUsage());
             return;
         }
         if (!this.tryParse(args[0])) {
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText(prefix + "Usage: " + getUsage()));
+            Hyperium.INSTANCE.getHandlers().getGeneralChatHandler().sendMessage(prefix + "Usage: " + getUsage());
             return;
         }
         final Integer multiplier = Integer.parseInt(args[0]);
         if (multiplier < 1) {
-            Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText(prefix + "Usage: " + getUsage()));
+            Hyperium.INSTANCE.getHandlers().getGeneralChatHandler().sendMessage(prefix + "Usage: " + getUsage());
             return;
         }
-        this.mod.multiplier = multiplier;
-        this.mod.saveConfig();
-        Minecraft.getMinecraft().thePlayer.addChatMessage((IChatComponent) new ChatComponentText(prefix + "Particle multiplier set to " + multiplier + "!"));
+        ParticleMod.multiplier = multiplier;
+        Hyperium.INSTANCE.getHandlers().getGeneralChatHandler().sendMessage(prefix + "Particle multiplier set to " + multiplier + "!");
     }
 
     private boolean tryParse(final String parse) {

@@ -1,5 +1,6 @@
 {
   "name":"Particle Modifier",
   "version":"1.0",
-  "mainClass":"me.chachy.particlemodifer.ParticleMod"
+  "mainClass":"me.chachy.particlemodifer.ParticleMod",
+  "overlay":"me.chachy.particlemodifier.overlay.ParticleOverlay"
 }
